@@ -1,20 +1,48 @@
-# Welcome to your Expo app 👋
+# Roadio 🚘
+
+
+## Overview
+
+A passion project that combines my interests in music, cars and AI - Roadio is an AI-powered road trip music app that curates playlists based on subtle factors such as your location, the weather, and your destination.
+
+## 👤 About the Developer
+
+### Peter Ghanem
+
+- **Role:** Developer & Designer
+- **Website:** https://peterghanem.com
+- **LinkedIn:** https://www.linkedin.com/in/peterjghanem/
+
+## 🛠 Technologies Used
+
+- React Native
+- Expo
+- ...
+
+## Getting started
+
 
 This is an [Expo](https://expo.dev) project created with
-[`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
-
-## Get started
+[`create-expo-app`](https://www.npmjs.com/package/create-expo-app). Follow the instructions below to run this locally.
 
 1. Install dependencies
 
     ```bash
-    npm install
+   npm install
+   
+   or
+   
+   yarn install
     ```
 
 2. Start the app
 
     ```bash
-     npx expo start
+   npx expo start
+   
+   or
+   
+   yarn expo start
     ```
 
 In the output, you'll find options to open the app in a
@@ -35,10 +63,3 @@ To learn more about developing your project with Expo, look at the following res
   [guides](https://docs.expo.dev/guides).
 - [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll
   create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
