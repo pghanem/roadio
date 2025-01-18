@@ -1,4 +1,4 @@
-import App from "./App"; // This imports the App component
+import App from "./App";
 
 export default function Page() {
     return <App />;
