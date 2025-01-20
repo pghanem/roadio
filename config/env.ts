@@ -1,5 +1,7 @@
+import Constants from "expo-constants";
+
 export const SPOTIFY_CONFIG = {
-    CLIENT_ID: "your_client_id_here",
-    CLIENT_SECRET: "your_client_secret_here",
-    REDIRECT_URI: "your_redirect_uri_here",
+    CLIENT_ID: process.env.SPOTIFY_CLIENT_ID!,
+    CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET!,
+    REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI!,
 } as const;

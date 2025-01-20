@@ -25,7 +25,14 @@ A passion project that combines my interests in music, cars and AI - Roadio is a
 This is an [Expo](https://expo.dev) project created with
 [`create-expo-app`](https://www.npmjs.com/package/create-expo-app). Follow the instructions below to run this locally.
 
-1. Install dependencies
+1. Setup
+
+```bash
+    1. Copy `.env.example` to `.env`
+    2. Fill in your Spotify API credentials in `.env`
+```
+
+2. Install dependencies
 
     ```bash
    npm install
@@ -35,7 +42,7 @@ This is an [Expo](https://expo.dev) project created with
    yarn install
     ```
 
-2. Start the app
+3. Start the app
 
     ```bash
    npx expo start
