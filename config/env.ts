@@ -9,3 +9,7 @@ export const SPOTIFY_CONFIG = {
     CLIENT_SECRET: Constants.expoConfig?.extra?.SPOTIFY_CLIENT_SECRET ?? "",
     REDIRECT_URI: Constants.expoConfig?.extra?.SPOTIFY_REDIRECT_URI ?? "",
 } as const;
+
+export const OPENAI_CONFIG = {
+    OPENAI_ID: Constants.expoConfig?.extra?.OPENAI_ID ?? "",
+} as const;
