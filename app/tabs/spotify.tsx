@@ -4,7 +4,7 @@ import { Container, Main, Subtitle, Title, LoginButton, LoginButtonText } from "
 import { spotifyApi } from "../../services/spotify";
 import { useSpotifyAuth } from "../../hooks/useSpotifyAuth";
 
-export default function SpotifyLogin() {
+export default function SpotifyScreen() {
     const loginMutation = useSpotifyAuth();
     const isLoading = loginMutation.isPending;
 
