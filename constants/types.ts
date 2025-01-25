@@ -4,6 +4,7 @@ export interface Song {
 }
 
 export interface ContextData {
+    vibe: string;
     weather: string;
     temperature: number;
     location: string;

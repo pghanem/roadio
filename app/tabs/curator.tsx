@@ -9,10 +9,11 @@ export default function CuratorScreen() {
     const [error, setError] = useState<string | null>(null);
 
     const mockContextData: ContextData = {
-        weather: "sunny",
-        temperature: 75,
-        location: "beach",
-        time: "14:00",
+        vibe: "EDM",
+        weather: "dark rainy evening",
+        temperature: 50,
+        location: "powell river british columbia canada",
+        time: "19:00",
     };
 
     const getSongSuggestions = async (): Promise<void> => {
@@ -31,7 +32,8 @@ export default function CuratorScreen() {
                     messages: [
                         {
                             role: "user",
-                            content: `Given the following context, suggest 5 songs that would be appropriate:
+                            content: `Given the following context, suggest 3 songs that would be appropriate:
+              Vibe: ${mockContextData.vibe}
               Weather: ${mockContextData.weather}
               Temperature: ${mockContextData.temperature}°F
               Location: ${mockContextData.location}
