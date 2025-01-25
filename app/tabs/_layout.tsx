@@ -21,8 +21,18 @@ export default function TabLayout() {
                 headerShown: false,
             })}
         >
-            <Tabs.Screen name="spotify" />
-            <Tabs.Screen name="curator" />
+            <Tabs.Screen
+                name="spotify"
+                options={{
+                    title: "Spotify"
+                }}
+            />
+            <Tabs.Screen
+                name="curator"
+                options={{
+                    title: "Curator"
+                }}
+            />
         </Tabs>
     );
 }
