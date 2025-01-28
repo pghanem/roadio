@@ -1,10 +1,11 @@
-import { View, Text, Button, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text, Button, StyleSheet, ActivityIndicator, ScrollView } from "react-native";
 import { ContextData, Song } from "../../constants/types";
 import { OPENAI_CONFIG } from "../../config/env";
 import { useState } from "react";
 
 export default function CuratorScreen() {
     const [suggestions, setSuggestions] = useState<Song[]>([]);
+    const [explanations, setExplanations] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -50,8 +51,8 @@ export default function CuratorScreen() {
 
                                 Use these weights to prioritize the importance of each property when selecting the songs.
 
-                                Return the response as a JSON array with song objects containing 'title' and 'artist' properties only.
-                                Example format: [{"title": "Song Name", "artist": "Artist Name"}]`,
+                                Return the response as a JSON array of objects with 'title', 'artist', and 'reason' properties. Each 'reason' should briefly explain why the song was selected, referencing the context and weights.
+                                Example format: [{"title": "Song Name", "artist": "Artist Name", "reason": "Explanation of why this song fits."}]`,
                         },
                     ],
                 }),
@@ -63,8 +64,18 @@ export default function CuratorScreen() {
 
             const data = await response.json();
 
-            const suggestedSongs: Song[] = JSON.parse(data.choices[0].message.content);
-            setSuggestions(suggestedSongs);
+            const rawContent = data.choices[0].message.content;
+            const jsonMatch = rawContent.match(/\[.*\]/s);
+
+            if (!jsonMatch) {
+                throw new Error("Could not find valid JSON in the response.");
+            }
+
+            const sanitizedJSON = jsonMatch[0];
+            const parsedData = JSON.parse(sanitizedJSON);
+
+            setSuggestions(parsedData.map((item: any) => ({ title: item.title, artist: item.artist })));
+            setExplanations(parsedData.map((item: any) => item.reason));
         } catch (err) {
             setError(err instanceof Error ? err.message : "An error occurred");
             console.error("Error getting suggestions:", err);
@@ -85,15 +96,16 @@ export default function CuratorScreen() {
 
             {error && <Text style={styles.errorText}>Error: {error}</Text>}
 
-            <View style={styles.suggestionsContainer}>
+            <ScrollView style={styles.suggestionsContainer}>
                 {suggestions.map((song, index) => (
                     <View key={index} style={styles.songItem}>
                         <Text style={styles.songText}>
                             {song.title} - {song.artist}
                         </Text>
+                        <Text style={styles.reasonText}>{explanations[index]}</Text>
                     </View>
                 ))}
-            </View>
+            </ScrollView>
         </View>
     );
 }
@@ -120,5 +132,11 @@ const styles = StyleSheet.create({
     },
     songText: {
         fontSize: 16,
+        fontWeight: "bold",
+    },
+    reasonText: {
+        fontSize: 14,
+        color: "#555",
+        marginTop: 5,
     },
 });
