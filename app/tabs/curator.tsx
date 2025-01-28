@@ -16,6 +16,14 @@ export default function CuratorScreen() {
         time: "19:00",
     };
 
+    const weights = {
+        vibe: 30,
+        weather: 25,
+        temperature: 15,
+        location: 20,
+        time: 10,
+    };
+
     const getSongSuggestions = async (): Promise<void> => {
         setLoading(true);
         setError(null);
@@ -32,15 +40,18 @@ export default function CuratorScreen() {
                     messages: [
                         {
                             role: "user",
-                            content: `Given the following context, suggest 3 songs that would be appropriate:
-              Vibe: ${mockContextData.vibe}
-              Weather: ${mockContextData.weather}
-              Temperature: ${mockContextData.temperature}°F
-              Location: ${mockContextData.location}
-              Time: ${mockContextData.time}
-              
-              Return the response as a JSON array with song objects containing 'title' and 'artist' properties only.
-              Example format: [{"title": "Song Name", "artist": "Artist Name"}]`,
+                            content: `Given the following context and weights, suggest 3 songs that would be appropriate:
+                                Context:
+                                Vibe: ${mockContextData.vibe} (${weights.vibe}%)
+                                Weather: ${mockContextData.weather} (${weights.weather}%)
+                                Temperature: ${mockContextData.temperature}°F (${weights.temperature}%)
+                                Location: ${mockContextData.location} (${weights.location}%)
+                                Time: ${mockContextData.time} (${weights.time}%)
+
+                                Use these weights to prioritize the importance of each property when selecting the songs.
+
+                                Return the response as a JSON array with song objects containing 'title' and 'artist' properties only.
+                                Example format: [{"title": "Song Name", "artist": "Artist Name"}]`,
                         },
                     ],
                 }),
