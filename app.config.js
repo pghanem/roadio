@@ -7,7 +7,7 @@ module.exports = {
         version: "1.0.0",
         orientation: "portrait",
         icon: "./assets/images/icon.png",
-        scheme: "myapp",
+        scheme: "roadio",
         userInterfaceStyle: "automatic",
         newArchEnabled: true,
         ios: {
@@ -42,7 +42,8 @@ module.exports = {
         extra: {
             SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
             SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
-            SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
+            SPOTIFY_REDIRECT_URI_WEB: process.env.SPOTIFY_REDIRECT_URI_WEB,
+            SPOTIFY_REDIRECT_URI_NATIVE: process.env.SPOTIFY_REDIRECT_URI_NATIVE,
             OPENAI_API_KEY: process.env.OPENAI_API_KEY,
         },
     },
