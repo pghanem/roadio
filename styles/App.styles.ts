@@ -33,6 +33,7 @@ export const LoginButton = styled.TouchableOpacity<{ disabled?: boolean }>`
     border-radius: 24px;
     margin-top: 24px;
     opacity: ${(props) => (props.disabled ? 0.7 : 1)};
+    border: 2px gray solid;
 `;
 
 export const LoginButtonText = styled.Text`
