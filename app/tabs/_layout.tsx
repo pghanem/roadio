@@ -11,7 +11,7 @@ export default function TabLayout() {
                     if (route.name === "spotify") {
                         iconName = "spotify";
                     } else if (route.name === "curator") {
-                        iconName = "brain";
+                        iconName = "music";
                     }
 
                     return <FontAwesome name={iconName} size={size} color={color} />;
