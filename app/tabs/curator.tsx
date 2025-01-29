@@ -1,4 +1,4 @@
-import { View, Text, Button, StyleSheet, ActivityIndicator, ScrollView } from "react-native";
+import { View, Text, Button, StyleSheet, ActivityIndicator, ScrollView, TextInput, Switch } from "react-native";
 import { ContextData, Song } from "../../constants/types";
 import { OPENAI_CONFIG } from "../../config/env";
 import { useState } from "react";
@@ -9,14 +9,14 @@ export default function CuratorScreen() {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const mockContextData: ContextData = {
+    const [contextData, setContextData] = useState<ContextData>({
         discover: true,
         vibe: "EDM",
         weather: "dark rainy evening",
         temperature: 50,
         location: "powell river british columbia canada",
         time: "19:00",
-    };
+    });
 
     const weights = {
         vibe: 30,
@@ -24,6 +24,13 @@ export default function CuratorScreen() {
         temperature: 15,
         location: 20,
         time: 10,
+    };
+
+    const updateContextData = (field: keyof ContextData, value: any) => {
+        setContextData(prev => ({
+            ...prev,
+            [field]: value
+        }));
     };
 
     const getSongSuggestions = async (): Promise<void> => {
@@ -44,12 +51,12 @@ export default function CuratorScreen() {
                             role: "user",
                             content: `Given the following context and weights, suggest 3 songs that would be appropriate:
                                 Context:
-                                Discover: ${mockContextData.discover} - when discover is true, favour non-mainstream music.
-                                Vibe: ${mockContextData.vibe} (${weights.vibe}%)
-                                Weather: ${mockContextData.weather} (${weights.weather}%)
-                                Temperature: ${mockContextData.temperature}°F (${weights.temperature}%)
-                                Location: ${mockContextData.location} (${weights.location}%)
-                                Time: ${mockContextData.time} (${weights.time}%)
+                                Discover: ${contextData.discover} - when discover is true, favour non-mainstream music.
+                                Vibe: ${contextData.vibe} (${weights.vibe}%)
+                                Weather: ${contextData.weather} (${weights.weather}%)
+                                Temperature: ${contextData.temperature}°F (${weights.temperature}%)
+                                Location: ${contextData.location} (${weights.location}%)
+                                Time: ${contextData.time} (${weights.time}%)
 
                                 Use these weights to prioritize the importance of each property when selecting the songs.
 
@@ -87,8 +94,73 @@ export default function CuratorScreen() {
     };
 
     return (
-        <View style={styles.container}>
-            <Button title="Get Song Suggestions" onPress={getSongSuggestions} disabled={loading} />
+        <ScrollView style={styles.container}>
+            <View style={styles.inputContainer}>
+                <View style={styles.switchContainer}>
+                    <Text>Discover Mode:</Text>
+                    <Switch
+                        value={contextData.discover}
+                        onValueChange={(value) => updateContextData('discover', value)}
+                    />
+                </View>
+
+                <View style={styles.inputField}>
+                    <Text>Vibe:</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={contextData.vibe}
+                        onChangeText={(text) => updateContextData('vibe', text)}
+                        placeholder="Enter vibe (e.g., EDM, Chill, Rock)"
+                    />
+                </View>
+
+                <View style={styles.inputField}>
+                    <Text>Weather:</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={contextData.weather}
+                        onChangeText={(text) => updateContextData('weather', text)}
+                        placeholder="Enter weather conditions"
+                    />
+                </View>
+
+                <View style={styles.inputField}>
+                    <Text>Temperature (°F):</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={contextData.temperature.toString()}
+                        onChangeText={(text) => updateContextData('temperature', parseInt(text) || 0)}
+                        keyboardType="numeric"
+                        placeholder="Enter temperature"
+                    />
+                </View>
+
+                <View style={styles.inputField}>
+                    <Text>Location:</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={contextData.location}
+                        onChangeText={(text) => updateContextData('location', text)}
+                        placeholder="Enter location"
+                    />
+                </View>
+
+                <View style={styles.inputField}>
+                    <Text>Time:</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={contextData.time}
+                        onChangeText={(text) => updateContextData('time', text)}
+                        placeholder="Enter time (HH:MM)"
+                    />
+                </View>
+            </View>
+
+            <Button
+                title="Get Song Suggestions"
+                onPress={getSongSuggestions}
+                disabled={loading}
+            />
 
             {loading && (
                 <View style={styles.loadingContainer}>
@@ -98,7 +170,7 @@ export default function CuratorScreen() {
 
             {error && <Text style={styles.errorText}>Error: {error}</Text>}
 
-            <ScrollView style={styles.suggestionsContainer}>
+            <View style={styles.suggestionsContainer}>
                 {suggestions.map((song, index) => (
                     <View key={index} style={styles.songItem}>
                         <Text style={styles.songText}>
@@ -107,15 +179,34 @@ export default function CuratorScreen() {
                         <Text style={styles.reasonText}>{explanations[index]}</Text>
                     </View>
                 ))}
-            </ScrollView>
-        </View>
+            </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
         flex: 1,
+        padding: 20,
+    },
+    inputContainer: {
+        marginBottom: 20,
+    },
+    inputField: {
+        marginBottom: 15,
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        padding: 8,
+        marginTop: 5,
+    },
+    switchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 15,
     },
     loadingContainer: {
         marginVertical: 20,
