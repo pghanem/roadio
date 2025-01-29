@@ -4,6 +4,12 @@ import { SPOTIFY_CONFIG } from "../config/env";
 const SPOTIFY_AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
 const SPOTIFY_TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token";
 
+let accessToken: string | null = null;
+
+interface SpotifyGenresResponse {
+    genres: string[];
+}
+
 interface SpotifyTokenResponse {
     access_token: string;
     token_type: string;
@@ -52,6 +58,29 @@ export const spotifyApi = {
         }
 
         return response.json();
+    },
+
+    setAccessToken: (token: string) => {
+        accessToken = token;
+    },
+
+    getAvailableGenres: async (): Promise<string[]> => {
+        if (!accessToken) {
+            throw new Error('No access token available');
+        }
+
+        const response = await fetch('https://api.spotify.com/v1/recommendations/available-genre-seeds', {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch genres');
+        }
+
+        const data: SpotifyGenresResponse = await response.json();
+        return data.genres;
     },
 };
 
