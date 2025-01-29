@@ -10,6 +10,7 @@ export default function CuratorScreen() {
     const [error, setError] = useState<string | null>(null);
 
     const mockContextData: ContextData = {
+        discover: true,
         vibe: "EDM",
         weather: "dark rainy evening",
         temperature: 50,
@@ -43,6 +44,7 @@ export default function CuratorScreen() {
                             role: "user",
                             content: `Given the following context and weights, suggest 3 songs that would be appropriate:
                                 Context:
+                                Discover: ${mockContextData.discover} - when discover is true, favour non-mainstream music.
                                 Vibe: ${mockContextData.vibe} (${weights.vibe}%)
                                 Weather: ${mockContextData.weather} (${weights.weather}%)
                                 Temperature: ${mockContextData.temperature}°F (${weights.temperature}%)
