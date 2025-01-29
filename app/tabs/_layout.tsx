@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
 export default function TabLayout() {
     return (
@@ -9,12 +9,12 @@ export default function TabLayout() {
                     let iconName;
 
                     if (route.name === "spotify") {
-                        iconName = focused ? "musical-notes" : "musical-notes-outline";
+                        iconName = "spotify";
                     } else if (route.name === "curator") {
-                        iconName = focused ? "list" : "list-outline";
+                        iconName = "brain";
                     }
 
-                    return <Ionicons name={iconName as any} size={size} color={color} />;
+                    return <FontAwesome name={iconName} size={size} color={color} />;
                 },
                 tabBarActiveTintColor: "#1DB954",
                 tabBarInactiveTintColor: "gray",
