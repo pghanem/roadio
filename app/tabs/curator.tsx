@@ -14,10 +14,7 @@ export default function CuratorScreen() {
         discover: true,
         vibe: "EDM",
         weather: "sunny",
-        destination: {
-            latitude: 0,
-            longitude: 0,
-        },
+        destination: "whistler",
         location: "powell river british columbia canada",
         time: "19:00",
     });
@@ -68,7 +65,7 @@ export default function CuratorScreen() {
                                 Discover: ${contextData.discover} - when discover is true, favour non-mainstream music.
                                 Vibe: ${contextData.vibe} (${weights.vibe}%)
                                 Weather: ${contextData.weather} (${weights.weather}%)
-                                Destination: ${contextData.destination.latitude}, ${contextData.destination.longitude} (${weights.location}%)
+                                Destination: ${contextData.destination} (${weights.location}%)
                                 Location: ${contextData.location} (${weights.location}%)
                                 Time: ${contextData.time} (${weights.time}%)
 
@@ -148,33 +145,14 @@ export default function CuratorScreen() {
                 </View>
 
                 <View style={styles.inputField}>
-                    <Text>Destination Coordinates:</Text>
-                    <View style={styles.coordinatesContainer}>
+                    <Text>Destination :</Text>
                         <TextInput
                             style={[styles.input, styles.coordinateInput]}
-                            value={contextData.destination.latitude.toString()}
+                            value={contextData.destination.toString()}
                             onChangeText={(text) =>
-                                updateContextData('destination', {
-                                    ...contextData.destination,
-                                    latitude: parseFloat(text) || 0
-                                })
+                                updateContextData('destination', text)
                             }
-                            keyboardType="numeric"
-                            placeholder="Latitude"
                         />
-                        <TextInput
-                            style={[styles.input, styles.coordinateInput]}
-                            value={contextData.destination.longitude.toString()}
-                            onChangeText={(text) =>
-                                updateContextData('destination', {
-                                    ...contextData.destination,
-                                    longitude: parseFloat(text) || 0
-                                })
-                            }
-                            keyboardType="numeric"
-                            placeholder="Longitude"
-                        />
-                    </View>
                 </View>
 
                 <View style={styles.inputField}>
