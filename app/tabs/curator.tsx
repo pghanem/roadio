@@ -1,4 +1,5 @@
 import { View, Text, Button, StyleSheet, ActivityIndicator, ScrollView, TextInput, Switch } from "react-native";
+import { Picker } from '@react-native-picker/picker';
 import { ContextData, Song } from "../../constants/types";
 import { OPENAI_CONFIG } from "../../config/env";
 import { useState } from "react";
@@ -12,18 +13,31 @@ export default function CuratorScreen() {
     const [contextData, setContextData] = useState<ContextData>({
         discover: true,
         vibe: "EDM",
-        weather: "dark rainy evening",
-        temperature: 50,
+        weather: "sunny",
+        destination: {
+            latitude: 0,
+            longitude: 0,
+        },
         location: "powell river british columbia canada",
         time: "19:00",
     });
 
+    const weatherOptions = [
+        "sunny",
+        "partly cloudy",
+        "cloudy",
+        "raining",
+        "thunderstorm",
+        "snowing",
+        "foggy",
+        "clear skies"
+    ];
+
     const weights = {
         vibe: 30,
-        weather: 25,
-        temperature: 15,
-        location: 20,
-        time: 10,
+        weather: 30,
+        location: 25,
+        time: 15,
     };
 
     const updateContextData = (field: keyof ContextData, value: any) => {
@@ -54,7 +68,7 @@ export default function CuratorScreen() {
                                 Discover: ${contextData.discover} - when discover is true, favour non-mainstream music.
                                 Vibe: ${contextData.vibe} (${weights.vibe}%)
                                 Weather: ${contextData.weather} (${weights.weather}%)
-                                Temperature: ${contextData.temperature}°F (${weights.temperature}%)
+                                Destination: ${contextData.destination.latitude}, ${contextData.destination.longitude} (${weights.location}%)
                                 Location: ${contextData.location} (${weights.location}%)
                                 Time: ${contextData.time} (${weights.time}%)
 
@@ -116,23 +130,51 @@ export default function CuratorScreen() {
 
                 <View style={styles.inputField}>
                     <Text>Weather:</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={contextData.weather}
-                        onChangeText={(text) => updateContextData('weather', text)}
-                        placeholder="Enter weather conditions"
-                    />
+                    <View style={styles.pickerContainer}>
+                        <Picker
+                            selectedValue={contextData.weather}
+                            onValueChange={(value) => updateContextData('weather', value)}
+                            style={styles.picker}
+                        >
+                            {weatherOptions.map((weather) => (
+                                <Picker.Item
+                                    key={weather}
+                                    label={weather.charAt(0).toUpperCase() + weather.slice(1)}
+                                    value={weather}
+                                />
+                            ))}
+                        </Picker>
+                    </View>
                 </View>
 
                 <View style={styles.inputField}>
-                    <Text>Temperature (°F):</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={contextData.temperature.toString()}
-                        onChangeText={(text) => updateContextData('temperature', parseInt(text) || 0)}
-                        keyboardType="numeric"
-                        placeholder="Enter temperature"
-                    />
+                    <Text>Destination Coordinates:</Text>
+                    <View style={styles.coordinatesContainer}>
+                        <TextInput
+                            style={[styles.input, styles.coordinateInput]}
+                            value={contextData.destination.latitude.toString()}
+                            onChangeText={(text) =>
+                                updateContextData('destination', {
+                                    ...contextData.destination,
+                                    latitude: parseFloat(text) || 0
+                                })
+                            }
+                            keyboardType="numeric"
+                            placeholder="Latitude"
+                        />
+                        <TextInput
+                            style={[styles.input, styles.coordinateInput]}
+                            value={contextData.destination.longitude.toString()}
+                            onChangeText={(text) =>
+                                updateContextData('destination', {
+                                    ...contextData.destination,
+                                    longitude: parseFloat(text) || 0
+                                })
+                            }
+                            keyboardType="numeric"
+                            placeholder="Longitude"
+                        />
+                    </View>
                 </View>
 
                 <View style={styles.inputField}>
@@ -207,6 +249,22 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         marginBottom: 15,
+    },
+    pickerContainer: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        marginTop: 5,
+    },
+    picker: {
+        height: 50,
+    },
+    coordinatesContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    coordinateInput: {
+        flex: 0.48,
     },
     loadingContainer: {
         marginVertical: 20,

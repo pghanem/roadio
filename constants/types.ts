@@ -7,7 +7,10 @@ export interface ContextData {
     discover: boolean;
     vibe: string;
     weather: string;
-    temperature: number;
+    destination: {
+        latitude: number;
+        longitude: number;
+    };
     location: string;
     time: string;
 }
