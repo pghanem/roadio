@@ -9,5 +9,6 @@ export interface ContextData {
     weather: string;
     destination: string;
     location: string;
-    time: string;
+    useTime: boolean;
+    time?: string;
 }

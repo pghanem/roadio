@@ -16,7 +16,12 @@ export default function CuratorScreen() {
         weather: "sunny",
         destination: "whistler",
         location: "powell river british columbia canada",
-        time: "19:00",
+        useTime: false,
+        time: new Date().toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        }),
     });
 
     const weatherOptions = [
@@ -49,6 +54,17 @@ export default function CuratorScreen() {
         setError(null);
 
         try {
+            if (contextData.useTime) {
+                setContextData(prev => ({
+                    ...prev,
+                    time: new Date().toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                    })
+                }));
+            }
+
             const response = await fetch("https://api.openai.com/v1/chat/completions", {
                 method: "POST",
                 headers: {
@@ -67,7 +83,7 @@ export default function CuratorScreen() {
                                 Weather: ${contextData.weather} (${weights.weather}%)
                                 Destination: ${contextData.destination} (${weights.location}%)
                                 Location: ${contextData.location} (${weights.location}%)
-                                Time: ${contextData.time} (${weights.time}%)
+                                ${contextData.useTime ? `Time: ${contextData.time} (${weights.time}%)` : ''}
 
                                 Use these weights to prioritize the importance of each property when selecting the songs.
 
@@ -83,7 +99,6 @@ export default function CuratorScreen() {
             }
 
             const data = await response.json();
-
             const rawContent = data.choices[0].message.content;
             const jsonMatch = rawContent.match(/\[.*\]/s);
 
@@ -145,14 +160,14 @@ export default function CuratorScreen() {
                 </View>
 
                 <View style={styles.inputField}>
-                    <Text>Destination :</Text>
-                        <TextInput
-                            style={[styles.input, styles.coordinateInput]}
-                            value={contextData.destination.toString()}
-                            onChangeText={(text) =>
-                                updateContextData('destination', text)
-                            }
-                        />
+                    <Text>Destination:</Text>
+                    <TextInput
+                        style={[styles.input, styles.coordinateInput]}
+                        value={contextData.destination.toString()}
+                        onChangeText={(text) =>
+                            updateContextData('destination', text)
+                        }
+                    />
                 </View>
 
                 <View style={styles.inputField}>
@@ -165,15 +180,27 @@ export default function CuratorScreen() {
                     />
                 </View>
 
-                <View style={styles.inputField}>
-                    <Text>Time:</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={contextData.time}
-                        onChangeText={(text) => updateContextData('time', text)}
-                        placeholder="Enter time (HH:MM)"
+                <View style={styles.switchContainer}>
+                    <Text>Use Current Time:</Text>
+                    <Switch
+                        value={contextData.useTime}
+                        onValueChange={(value) => {
+                            updateContextData('useTime', value);
+                            if (value) {
+                                updateContextData('time', new Date().toLocaleTimeString('en-US', {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: false
+                                }));
+                            }
+                        }}
                     />
                 </View>
+                {contextData.useTime && (
+                    <View style={styles.timeDisplay}>
+                        <Text>Current Time: {contextData.time}</Text>
+                    </View>
+                )}
             </View>
 
             <Button
@@ -221,7 +248,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 8,
         marginTop: 5,
-        backgroundColor: `white`,
+        backgroundColor: 'white',
     },
     switchContainer: {
         flexDirection: 'row',
@@ -268,5 +295,12 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: "#555",
         marginTop: 5,
+    },
+    timeDisplay: {
+        marginTop: 5,
+        marginBottom: 15,
+        padding: 8,
+        backgroundColor: '#f0f0f0',
+        borderRadius: 5,
     },
 });
