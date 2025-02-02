@@ -221,6 +221,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 8,
         marginTop: 5,
+        backgroundColor: `white`,
     },
     switchContainer: {
         flexDirection: 'row',
