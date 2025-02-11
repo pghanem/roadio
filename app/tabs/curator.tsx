@@ -1,4 +1,4 @@
-import { View, Text, Button, StyleSheet, ActivityIndicator, ScrollView, TextInput, Switch } from "react-native";
+import { View, Text, Button, StyleSheet, ActivityIndicator, ScrollView, TextInput, Switch, useColorScheme } from "react-native";
 import { Picker } from '@react-native-picker/picker';
 import { ContextData, Song } from "../../constants/types";
 import { OPENAI_CONFIG } from "../../config/env";
@@ -9,6 +9,14 @@ export default function CuratorScreen() {
     const [explanations, setExplanations] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
+    const themeColors = {
+        background: isDarkMode ? '#1a1a1a' : '#ffffff',
+        text: isDarkMode ? '#ffffff' : '#000000',
+        card: isDarkMode ? '#2d2d2d' : '#f5f5f5',
+        border: isDarkMode ? '#404040' : '#cccccc',
+    };
 
     const [contextData, setContextData] = useState<ContextData>({
         discover: true,
@@ -120,10 +128,20 @@ export default function CuratorScreen() {
     };
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={[styles.container, { backgroundColor: themeColors.background }]}>
+            <View style={styles.themeToggle}>
+                <Text style={[styles.themeText, { color: themeColors.text }]}>
+                    {isDarkMode ? '🌙' : '☀️'} Theme
+                </Text>
+                <Switch
+                    value={isDarkMode}
+                    onValueChange={setIsDarkMode}
+                />
+            </View>
+
             <View style={styles.inputContainer}>
                 <View style={styles.switchContainer}>
-                    <Text>Discover Mode:</Text>
+                    <Text style={{ color: themeColors.text }}>Discover Mode:</Text>
                     <Switch
                         value={contextData.discover}
                         onValueChange={(value) => updateContextData('discover', value)}
@@ -131,28 +149,30 @@ export default function CuratorScreen() {
                 </View>
 
                 <View style={styles.inputField}>
-                    <Text>Vibe:</Text>
+                    <Text style={{ color: themeColors.text }}>Vibe:</Text>
                     <TextInput
-                        style={styles.input}
+                        style={[styles.input, { backgroundColor: themeColors.card, color: themeColors.text }]}
                         value={contextData.vibe}
                         onChangeText={(text) => updateContextData('vibe', text)}
                         placeholder="Enter vibe (e.g., EDM, Chill, Rock)"
+                        placeholderTextColor={isDarkMode ? '#888' : '#666'}
                     />
                 </View>
 
                 <View style={styles.inputField}>
-                    <Text>Weather:</Text>
-                    <View style={styles.pickerContainer}>
+                    <Text style={{ color: themeColors.text }}>Weather:</Text>
+                    <View style={[styles.pickerContainer, { backgroundColor: themeColors.card }]}>
                         <Picker
                             selectedValue={contextData.weather}
                             onValueChange={(value) => updateContextData('weather', value)}
-                            style={styles.picker}
+                            style={[styles.picker, {  backgroundColor: themeColors.card, color: themeColors.text }]}
                         >
                             {weatherOptions.map((weather) => (
                                 <Picker.Item
                                     key={weather}
                                     label={weather.charAt(0).toUpperCase() + weather.slice(1)}
                                     value={weather}
+                                    color={themeColors.text}
                                 />
                             ))}
                         </Picker>
@@ -160,28 +180,28 @@ export default function CuratorScreen() {
                 </View>
 
                 <View style={styles.inputField}>
-                    <Text>Destination:</Text>
+                    <Text style={{ color: themeColors.text }}>Destination:</Text>
                     <TextInput
-                        style={[styles.input, styles.coordinateInput]}
+                        style={[styles.input, styles.coordinateInput, { backgroundColor: themeColors.card, color: themeColors.text }]}
                         value={contextData.destination.toString()}
-                        onChangeText={(text) =>
-                            updateContextData('destination', text)
-                        }
+                        onChangeText={(text) => updateContextData('destination', text)}
+                        placeholderTextColor={isDarkMode ? '#888' : '#666'}
                     />
                 </View>
 
                 <View style={styles.inputField}>
-                    <Text>Location:</Text>
+                    <Text style={{ color: themeColors.text }}>Location:</Text>
                     <TextInput
-                        style={styles.input}
+                        style={[styles.input, { backgroundColor: themeColors.card, color: themeColors.text }]}
                         value={contextData.location}
                         onChangeText={(text) => updateContextData('location', text)}
                         placeholder="Enter location"
+                        placeholderTextColor={isDarkMode ? '#888' : '#666'}
                     />
                 </View>
 
                 <View style={styles.switchContainer}>
-                    <Text>Use Current Time:</Text>
+                    <Text style={{ color: themeColors.text }}>Use Current Time:</Text>
                     <Switch
                         value={contextData.useTime}
                         onValueChange={(value) => {
@@ -197,8 +217,8 @@ export default function CuratorScreen() {
                     />
                 </View>
                 {contextData.useTime && (
-                    <View style={styles.timeDisplay}>
-                        <Text>Current Time: {contextData.time}</Text>
+                    <View style={[styles.timeDisplay, { backgroundColor: themeColors.card }]}>
+                        <Text style={{ color: themeColors.text }}>Current Time: {contextData.time}</Text>
                     </View>
                 )}
             </View>
@@ -211,7 +231,7 @@ export default function CuratorScreen() {
 
             {loading && (
                 <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" color="#0000ff" />
+                    <ActivityIndicator size="large" color={isDarkMode ? '#ffffff' : '#0000ff'} />
                 </View>
             )}
 
@@ -219,11 +239,13 @@ export default function CuratorScreen() {
 
             <View style={styles.suggestionsContainer}>
                 {suggestions.map((song, index) => (
-                    <View key={index} style={styles.songItem}>
-                        <Text style={styles.songText}>
+                    <View key={index} style={[styles.songItem, { backgroundColor: themeColors.card }]}>
+                        <Text style={[styles.songText, { color: themeColors.text }]}>
                             {song.title} - {song.artist}
                         </Text>
-                        <Text style={styles.reasonText}>{explanations[index]}</Text>
+                        <Text style={[styles.reasonText, { color: isDarkMode ? '#bbbbbb' : '#555555' }]}>
+                            {explanations[index]}
+                        </Text>
                     </View>
                 ))}
             </View>
@@ -235,6 +257,17 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
+    },
+    themeToggle: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 10,
+        marginBottom: 15,
+        borderRadius: 8,
+    },
+    themeText: {
+        fontSize: 16,
     },
     inputContainer: {
         marginBottom: 20,
@@ -248,7 +281,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 8,
         marginTop: 5,
-        backgroundColor: 'white',
     },
     switchContainer: {
         flexDirection: 'row',
@@ -285,7 +317,8 @@ const styles = StyleSheet.create({
     songItem: {
         padding: 10,
         borderBottomWidth: 1,
-        borderBottomColor: "#eee",
+        marginBottom: 10,
+        borderRadius: 8,
     },
     songText: {
         fontSize: 16,
@@ -293,14 +326,12 @@ const styles = StyleSheet.create({
     },
     reasonText: {
         fontSize: 14,
-        color: "#555",
         marginTop: 5,
     },
     timeDisplay: {
         marginTop: 5,
         marginBottom: 15,
         padding: 8,
-        backgroundColor: '#f0f0f0',
         borderRadius: 5,
     },
 });
