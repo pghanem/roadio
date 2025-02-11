@@ -40,7 +40,6 @@ export default function CuratorScreen() {
         "thunderstorm",
         "snowing",
         "foggy",
-        "clear skies"
     ];
 
     const weights = {
@@ -168,12 +167,8 @@ export default function CuratorScreen() {
                             style={[styles.picker, {  backgroundColor: themeColors.card, color: themeColors.text }]}
                         >
                             {weatherOptions.map((weather) => (
-                                <Picker.Item
-                                    key={weather}
-                                    label={weather.charAt(0).toUpperCase() + weather.slice(1)}
-                                    value={weather}
-                                    color={themeColors.text}
-                                />
+                                <Picker.Item key={weather} label={`${weather === 'sunny' ? '☀️' : weather === 'raining' ? '🌧️' : weather === 'cloudy' ? '☁️' : weather === 'snowing' ? '❄️' : weather === 'thunderstorm' ? '⛈️' : '😶‍🌫️'} ${weather.charAt(0).toUpperCase() + weather.slice(1)}`} value={weather} />
+
                             ))}
                         </Picker>
                     </View>
